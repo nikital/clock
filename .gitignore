@@ -1,1 +1,4 @@
+tags
+*.blend[1-9]
+
 public/js/clock.js
