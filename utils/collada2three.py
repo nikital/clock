@@ -22,17 +22,25 @@ class Collada (object):
 
         self.root = tree.root
 
+        self.geoms = {}
         self.scenes = {}
         self.nodes = {}
 
+        self.parse_geoms (self.root)
         self.parse_scenes (self.root)
 
-    def parse_scenes (self, root_xml):
-        visual_scenes = root_xml.find ('library_visual_scenes')
-        for scene in visual_scenes.iter ('visual_scene'):
-            self.parse_scene (scene)
+    def parse_geoms (self, root_xml):
+        for geom_xml in root_xml.iterfind ('library_geometries/geometry'):
+            mesh_xml = geom_xml.find ('mesh')
 
-    def parse_scene (self, scene_xml):
+    def parse_scenes (self, root_xml):
+        for scene_xml in root_xml.iterfind ('library_visual_scenes/visual_scene'):
+            nodes = self.parse_nodes (scene_xml)
+
+            scene = self.Scene (nodes)
+            self.scenes[scene_xml.attrib['id']] = scene
+
+    def parse_nodes (self, scene_xml):
         nodes = []
         for node_xml in scene_xml.iter ('node'):
             transform_str = node_xml.find ("matrix[@sid='transform']").text
@@ -42,12 +50,9 @@ class Collada (object):
             instance = None
 
             node = self.Node (node_xml.attrib['name'], transform, node_type, instance)
-
             nodes.append (node)
             self.nodes[node_xml.attrib['id']] = node
-
-        scene = self.Scene (nodes)
-        self.scenes[scene_xml.attrib['id']] = scene
+        return nodes
 
 def parse_args ():
     parser = argparse.ArgumentParser ()
