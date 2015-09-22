@@ -14,16 +14,33 @@ function main ()
     var cube = new THREE.Mesh (geometry, material);
     scene.add (cube);
 
+    scene.add( new THREE.AmbientLight( 0x555555 ) );
+
+    var light = new THREE.SpotLight( 0xffffff, 1.5 );
+    light.position.set( 0, 500, 2000 );
+    scene.add( light );
+
     camera.position.z = 5;
     function render ()
     {
-        cube.rotation.x += 0.1;
-        cube.rotation.y += 0.1;
         requestAnimationFrame (render);
         renderer.render (scene, camera);
     }
 
     render ();
+
+    var loader = new THREE.JSONLoader();
+
+    loader.load(
+        "assets/models/clock.json",
+        function (geometry:THREE.Geometry, materials:THREE.Material[]) {
+            var defaultMaterial = new THREE.MeshLambertMaterial ({ color: 0xffffff, shading: THREE.FlatShading, vertexColors: THREE.VertexColors });
+            //var material = new THREE.MeshFaceMaterial (materials);
+            var object = new THREE.Mesh (geometry, defaultMaterial);
+            object.position.x = -2;
+            scene.add (object);
+        }
+    );
 }
 
 main ();
