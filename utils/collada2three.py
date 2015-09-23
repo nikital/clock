@@ -2,8 +2,10 @@
 
 import argparse
 import sys
+import json
 from collections import namedtuple
 from xml.etree import ElementTree
+from uuid import uuid4 as uuid
 
 class Collada (object):
 
@@ -12,7 +14,7 @@ class Collada (object):
     Node = namedtuple ('Node',
                        ['name', 'transform', 'type', 'instance'])
     Geometry = namedtuple ('Geometry',
-                       ['faces', 'vertices', 'normals'])
+                       ['uuid', 'faces', 'vertices', 'normals'])
     Face = namedtuple ('Face',
                        ['vertices_idx', 'normals_idx'])
     Input = namedtuple ('Input',
@@ -28,7 +30,7 @@ class Collada (object):
 
         root = tree.root
 
-        self._geoms = {}
+        self.geoms = {}
         self.scenes = {}
         self._nodes = {}
 
@@ -67,8 +69,8 @@ class Collada (object):
                     face_normals.append (faces_idx[j + inputs['NORMAL'].offset])
                 faces.append (self.Face (face_vertices, face_normals))
 
-            geom = self.Geometry (faces, vertices, normals)
-            self._geoms[geom_xml.attrib['id']] = geom
+            geom = self.Geometry (str (uuid ()), faces, vertices, normals)
+            self.geoms[geom_xml.attrib['id']] = geom
 
     def _parse_source (self, mesh, source_id):
         # TODO Actually parse this (accessors and shit)
@@ -92,7 +94,7 @@ class Collada (object):
 
             if instance_geometry is not None:
                 node_type = 'geom'
-                instance = self._geoms[instance_geometry.attrib['url'].lstrip ('#')]
+                instance = self.geoms[instance_geometry.attrib['url'].lstrip ('#')]
             else:
                 node_type = 'unk'
                 instance = None
@@ -102,18 +104,81 @@ class Collada (object):
             self._nodes[node_xml.attrib['id']] = node
         return nodes
 
+def emit_three (collada):
+    three = {
+        'geometries': [],
+        'materials': [],
+        'object': {
+            'type': 'Scene',
+            'children': []
+        },
+    }
+
+    for geom in collada.geoms.values ():
+        faces_three = []
+        for face in geom.faces:
+            faces_three.append (32)
+            faces_three.extend (face.vertices_idx)
+            faces_three.extend (face.normals_idx)
+
+        geom_three = {
+            'uuid': geom.uuid,
+            'type': 'Geometry',
+            'data': {
+                'vertices': geom.vertices,
+                'normals': geom.normals,
+                'faces': faces_three
+            }
+        }
+
+        three['geometries'].append (geom_three)
+
+    default_material = {
+        'uuid': str (uuid ()),
+        'type': 'MeshLambertMaterial',
+        'color': 0x0000ff,
+        'emissive': 0
+    }
+
+    three['materials'].append (default_material)
+
+    assert len (collada.scenes) == 1
+    scene = collada.scenes.values ()[0]
+    for node in scene.nodes:
+        if node.type != 'geom':
+            continue
+        node_three = {
+            'type': 'Mesh',
+            'name': node.name,
+            'geometry': node.instance.uuid,
+            'material': default_material['uuid'],
+            'matrix': node.transform,
+        }
+
+        three['object']['children'].append (node_three)
+
+    return three
+
+
 def parse_args ():
     parser = argparse.ArgumentParser ()
     parser.add_argument ('dae', help='Input COLLADA file')
     parser.add_argument ('-o', '--output', help='Output three.js JSON file')
 
     args = parser.parse_args ()
+    if args.output is not None:
+        args.output = open (args.output, 'w')
+    else :
+        args.output = sys.stdout
     return args
 
 def main ():
     args = parse_args ()
     collada = Collada (args.dae)
-    print collada.scenes
+    three = emit_three (collada)
+
+    json.dump (three, args.output)
+    args.output.write ('\n')
 
 if __name__ == '__main__':
     sys.exit (main ())

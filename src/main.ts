@@ -1,9 +1,10 @@
-/// <reference path="threejs/three.d.ts" />
+/// <reference path="references.ts" />
 
 function main ()
 {
     var scene = new THREE.Scene ();
     var camera = new THREE.PerspectiveCamera (75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    var controls = new TrackballControls( camera );
 
     var renderer = new THREE.WebGLRenderer ();
     renderer.setSize (window.innerWidth, window.innerHeight);
@@ -16,29 +17,26 @@ function main ()
 
     scene.add( new THREE.AmbientLight( 0x555555 ) );
 
-    var light = new THREE.SpotLight( 0xffffff, 1.5 );
+    var light = new THREE.SpotLight( 0xffffff, 1 );
     light.position.set( 0, 500, 2000 );
     scene.add( light );
 
     camera.position.z = 5;
     function render ()
     {
+        controls.update ()
         requestAnimationFrame (render);
         renderer.render (scene, camera);
     }
 
     render ();
 
-    var loader = new THREE.JSONLoader();
+    var loader = new THREE.ObjectLoader();
 
     loader.load(
-        "assets/models/clock.json",
-        function (geometry:THREE.Geometry, materials:THREE.Material[]) {
-            var defaultMaterial = new THREE.MeshLambertMaterial ({ color: 0xffffff, shading: THREE.FlatShading, vertexColors: THREE.VertexColors });
-            //var material = new THREE.MeshFaceMaterial (materials);
-            var object = new THREE.Mesh (geometry, defaultMaterial);
-            object.position.x = -2;
-            scene.add (object);
+        "assets/clock.json",
+        function (obj:THREE.Object3D) {
+            scene.add (obj);
         }
     );
 }
