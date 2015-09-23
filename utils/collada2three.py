@@ -136,7 +136,7 @@ def emit_three (collada):
     default_material = {
         'uuid': str (uuid ()),
         'type': 'MeshLambertMaterial',
-        'color': 0x0000ff,
+        'color': 0xaaaaaa,
         'emissive': 0
     }
 
