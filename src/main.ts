@@ -35,8 +35,8 @@ function main ()
 
     loader.load(
         "assets/clock.json",
-        function (obj:THREE.Object3D) {
-            scene.add (obj);
+        function (clock:THREE.Object3D) {
+            scene.add (clock);
         }
     );
 }

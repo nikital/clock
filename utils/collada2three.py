@@ -152,13 +152,19 @@ def emit_three (collada):
             'name': node.name,
             'geometry': node.instance.uuid,
             'material': default_material['uuid'],
-            'matrix': node.transform,
+            'matrix': reorder_matrix4 (node.transform),
         }
 
         three['object']['children'].append (node_three)
 
     return three
 
+def reorder_matrix4 (matrix4):
+    matrix4_out = matrix4[:]
+    for i in xrange (4):
+        for j in xrange (4):
+            matrix4_out[i + j * 4] = matrix4[i * 4 + j]
+    return matrix4_out
 
 def parse_args ():
     parser = argparse.ArgumentParser ()
