@@ -24,7 +24,8 @@ class Mechanics
 
     // Runtime animation stuff
     private time_scale:number = 1;
-    private escape_wheel_dirty:boolean = false;
+    private escape_wheel_moving:boolean = false;
+    private escape_wheel_step_start:number = 0;
 
     private time:number = 0;
     private prev_frame_time:number;
@@ -45,12 +46,25 @@ class Mechanics
         var frame_time = new Date ().getTime ();
         var dt = (frame_time - this.prev_frame_time) / 1000 * this.time_scale;
         this.prev_frame_time = frame_time;
+
+        var max_dt = 0.3;
+        while (dt > 0.001)
+        {
+            this.step (Math.min (dt, max_dt))
+            dt -= max_dt;
+        }
+    }
+
+    step (dt:number)
+    {
         this.time += dt;
 
+        // Pendulum
         var pendulum_angle = this.pendulum_amp * Math.sin (this.time * this.pendulum_speed)
         var pendulum_direction = sign (Math.cos (this.time * this.pendulum_speed))
         this.pendulum.rotation.z = this.pendulum_middle + pendulum_angle;
 
+        // Anchor
         var anchor_angle:number = 0;
         if (Math.abs (pendulum_angle) > this.pendulum_anchor_contact)
         {
@@ -62,27 +76,28 @@ class Mechanics
         }
         this.anchor.rotation.z = this.anchor_middle + anchor_angle;
 
-        if (Math.abs (anchor_angle) < this.anchor_escape_wheel_contact)
+        // Escape wheel
+        var escape_should_move = Math.abs (anchor_angle) < this.anchor_escape_wheel_contact;
+        if (escape_should_move && !this.escape_wheel_moving)
         {
-            this.escape_wheel.rotateZ (-0.35 * dt)
-            this.escape_wheel_dirty = true;
+            // We just started the motion
+            this.escape_wheel_moving = true;
+            this.escape_wheel_step_start = this.escape_wheel.rotation.z;
         }
-        else if (this.escape_wheel_dirty)
+        else if (!escape_should_move && this.escape_wheel_moving)
         {
+            // We just stopped the motion
+            this.escape_wheel_moving = false;
             this.escape_wheel.rotation.z = Math.round (
                 this.escape_wheel.rotation.z / this.escape_wheel_step) *
                 this.escape_wheel_step;
-            if (pendulum_direction < 0)
-            {
-                this.escape_wheel.rotation.z = Math.round (
-                    this.escape_wheel.rotation.z / this.escape_wheel_step / 2) *
-                    this.escape_wheel_step * 2;
-            }
-            this.escape_wheel_dirty = false;
         }
 
-        //this.gear_000.rotateZ (this.gear_000_ratio * this.time_scale * dt);
-        //this.gear_001.rotateZ (this.gear_001_ratio * this.time_scale * dt);
+        if (this.escape_wheel_moving)
+        {
+            var escape_angle_d:number = (-pendulum_direction * anchor_angle / this.anchor_escape_wheel_contact + 1) / 2;
+            this.escape_wheel.rotation.z = this.escape_wheel_step_start - this.escape_wheel_step * escape_angle_d;
+        }
     }
 }
 
