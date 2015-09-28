@@ -25,7 +25,8 @@ class Mechanics
     // Runtime animation stuff
     private time_scale:number = 1;
     private escape_wheel_moving:boolean = false;
-    private escape_wheel_step_start:number = 0;
+    private escape_wheel_from:number = 0;
+    private escape_wheel_to:number = 0;
 
     private time:number = 0;
     private prev_frame_time:number;
@@ -47,7 +48,7 @@ class Mechanics
         var dt = (frame_time - this.prev_frame_time) / 1000 * this.time_scale;
         this.prev_frame_time = frame_time;
 
-        var max_dt = 0.3;
+        var max_dt = 0.5;
         while (dt > 0.001)
         {
             this.step (Math.min (dt, max_dt))
@@ -55,7 +56,7 @@ class Mechanics
         }
     }
 
-    step (dt:number)
+    private step (dt:number)
     {
         this.time += dt;
 
@@ -82,15 +83,13 @@ class Mechanics
         {
             // We just started the motion
             this.escape_wheel_moving = true;
-            this.escape_wheel_step_start = this.escape_wheel.rotation.z;
+            this.escape_wheel_step_start = this.snap_escape_wheel (-pendulum_direction);
         }
         else if (!escape_should_move && this.escape_wheel_moving)
         {
             // We just stopped the motion
             this.escape_wheel_moving = false;
-            this.escape_wheel.rotation.z = Math.round (
-                this.escape_wheel.rotation.z / this.escape_wheel_step) *
-                this.escape_wheel_step;
+            this.escape_wheel.rotation.z = this.escape_wheel_step_start - this.escape_wheel_step;
         }
 
         if (this.escape_wheel_moving)
@@ -99,9 +98,22 @@ class Mechanics
             this.escape_wheel.rotation.z = this.escape_wheel_step_start - this.escape_wheel_step * escape_angle_d;
         }
     }
+
+    private snap_escape_wheel (pendulum_direction:number):number
+    {
+        var rotation = this.escape_wheel.rotation.z;
+        return pendulum_direction > 0 ?
+            floor_to (rotation + 0.1, this.escape_wheel_step * 2) + this.escape_wheel_step :
+            floor_to (rotation + 0.1, this.escape_wheel_step * 2);
+    }
 }
 
 function sign (n:number):number
 {
     return n >= 0 ? 1 : -1;
+}
+
+function floor_to (n:number, to:number):number
+{
+    return Math.floor (n / to) * to;
 }

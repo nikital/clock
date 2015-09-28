@@ -33,7 +33,7 @@ class Main
         this.scene.add (light2);
 
         this.render ();
-        this.update ();
+        setInterval (this.update.bind (this), 16);
 
         var loader = new THREE.ObjectLoader();
 
@@ -56,7 +56,6 @@ class Main
         {
             this.mechanics.update ();
         }
-        setTimeout (this.update.bind (this), 16);
     }
 
     private on_clock_load (clock:THREE.Object3D)
