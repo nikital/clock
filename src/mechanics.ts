@@ -12,7 +12,7 @@ class Mechanics
 
     // Animation constants
     private pendulum_amp:number = 1.1;
-    private pendulum_speed:number = 1;
+    private pendulum_speed:number = 5;
     private pendulum_middle:number = -13 / 180 * Math.PI;
     private pendulum_anchor_contact:number = 39 / 180 * Math.PI;
 
