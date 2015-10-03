@@ -32,8 +32,7 @@ class Mechanics
     // Runtime animation stuff
     private time_scale:number = 1;
     private escape_wheel_moving:boolean = false;
-    private escape_wheel_from:number = 0;
-    private escape_wheel_to:number = 0;
+    private escape_wheel_step_start:number = 0;
 
     private time:number = 0;
     private prev_frame_time:number;
