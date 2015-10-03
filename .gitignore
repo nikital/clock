@@ -2,3 +2,4 @@ tags
 *.blend[1-9]
 
 public/js/clock.js
+public/assets/clock.json
