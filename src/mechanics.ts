@@ -7,8 +7,10 @@ class Mechanics
     private escape_wheel:THREE.Object3D;
     private gear_000:THREE.Object3D;
     private gear_001:THREE.Object3D;
+    private gear_minutes:THREE.Object3D;
     private gear_002:THREE.Object3D;
     private gear_003:THREE.Object3D;
+    private gear_hours:THREE.Object3D;
 
     // Animation constants
     private pendulum_amp:number = 1.1;
@@ -26,8 +28,10 @@ class Mechanics
 
     private gear_000_ratio:number = 48/6;
     private gear_001_ratio:number = 54/6;
-    private gear_002_ratio:number = 64/6;
-    private gear_003_ratio:number = 50/10;
+    private gear_minutes_ratio:number = 64/6;
+    private gear_002_ratio:number = 50/10;
+    private gear_003_ratio:number = 36/12;
+    private gear_hours_ratio:number = 40/10;
 
     // Runtime animation stuff
     private time_scale:number = 1;
@@ -45,8 +49,10 @@ class Mechanics
         this.escape_wheel = clock_root.getObjectByName ('escape_wheel');
         this.gear_000 = clock_root.getObjectByName ('gear_000');
         this.gear_001 = clock_root.getObjectByName ('gear_001');
+        this.gear_minutes = clock_root.getObjectByName ('gear_minutes');
         this.gear_002 = clock_root.getObjectByName ('gear_002');
         this.gear_003 = clock_root.getObjectByName ('gear_003');
+        this.gear_hours = clock_root.getObjectByName ('gear_hours');
 
         this.prev_frame_time = new Date ().getTime ();
     }
@@ -119,10 +125,14 @@ class Mechanics
         this.gear_000.rotateZ (gear_000_delta);
         var gear_001_delta = -gear_000_delta / this.gear_001_ratio;
         this.gear_001.rotateZ (gear_001_delta);
-        var gear_002_delta = -gear_001_delta / this.gear_002_ratio;
+        var gear_minutes_delta = -gear_001_delta / this.gear_minutes_ratio;
+        this.gear_minutes.rotateZ (gear_minutes_delta);
+        var gear_002_delta = -gear_minutes_delta / this.gear_002_ratio;
         this.gear_002.rotateZ (gear_002_delta);
-        var gear_003_delta = -gear_002_delta / this.gear_003_ratio;
+        var gear_003_delta = -gear_minutes_delta / this.gear_003_ratio;
         this.gear_003.rotateZ (gear_003_delta);
+        var gear_hours_delta = -gear_003_delta / this.gear_hours_ratio;
+        this.gear_hours.rotateZ (gear_hours_delta);
     }
 
     private snap_escape_wheel (pendulum_direction:number):number

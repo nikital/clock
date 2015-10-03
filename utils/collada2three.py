@@ -183,7 +183,7 @@ def main ():
     collada = Collada (args.dae)
     three = emit_three (collada)
 
-    json.dump (three, args.output)
+    json.dump (three, args.output, separators = (',', ':'))
     args.output.write ('\n')
 
 if __name__ == '__main__':
