@@ -79,8 +79,8 @@ class Mechanics
         var dt = (frame_time - this.prev_frame_time) / 1000 * this.time_scale;
         this.prev_frame_time = frame_time;
 
-        var max_dt = 0.5;
-        while (dt > 0.001)
+        var max_dt = 0.02;
+        while (dt > 0.0001)
         {
             this.step (Math.min (dt, max_dt))
             dt -= max_dt;
