@@ -34,6 +34,8 @@ class Mechanics
     private gear_002_ratio:number = 50/10;
     private gear_003_ratio:number = 36/12;
     private gear_hours_ratio:number = 40/10;
+    private total_minutes_ratio:number = -Math.PI * 2 *
+        this.gear_000_ratio * this.gear_001_ratio * this.gear_minutes_ratio;
 
     // Runtime animation stuff
     private time_scale:number = 1;
@@ -59,6 +61,16 @@ class Mechanics
         this.hand_hours = clock_root.getObjectByName ('hand_hours');
 
         this.prev_frame_time = new Date ().getTime ();
+
+        this.show_real_time ();
+    }
+
+    private show_real_time ()
+    {
+        // Assuming that the clock is set to 12:00
+        var date = new Date ();
+        var in_hours = date.getHours () % 12 + date.getMinutes () / 60;
+        this.rotate_gears (this.total_minutes_ratio * in_hours);
     }
 
     update ()
@@ -125,7 +137,12 @@ class Mechanics
         }
         var escape_delta = this.escape_wheel.rotation.z - escape_prev_angle;
 
-        var gear_000_delta = -escape_delta / this.gear_000_ratio;
+        this.rotate_gears (escape_delta);
+    }
+
+    private rotate_gears (delta:number)
+    {
+        var gear_000_delta = -delta / this.gear_000_ratio;
         this.gear_000.rotateZ (gear_000_delta);
         var gear_001_delta = -gear_000_delta / this.gear_001_ratio;
         this.gear_001.rotateZ (gear_001_delta);
