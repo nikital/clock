@@ -11,10 +11,12 @@ class Mechanics
     private gear_002:THREE.Object3D;
     private gear_003:THREE.Object3D;
     private gear_hours:THREE.Object3D;
+    private hand_minutes:THREE.Object3D;
+    private hand_hours:THREE.Object3D;
 
     // Animation constants
     private pendulum_amp:number = 1.1;
-    private pendulum_speed:number = 5;
+    private pendulum_speed:number = 10;
     private pendulum_middle:number = -13 / 180 * Math.PI;
     private pendulum_anchor_contact:number = 39 / 180 * Math.PI;
 
@@ -53,6 +55,8 @@ class Mechanics
         this.gear_002 = clock_root.getObjectByName ('gear_002');
         this.gear_003 = clock_root.getObjectByName ('gear_003');
         this.gear_hours = clock_root.getObjectByName ('gear_hours');
+        this.hand_minutes = clock_root.getObjectByName ('hand_minutes');
+        this.hand_hours = clock_root.getObjectByName ('hand_hours');
 
         this.prev_frame_time = new Date ().getTime ();
     }
@@ -133,6 +137,9 @@ class Mechanics
         this.gear_003.rotateZ (gear_003_delta);
         var gear_hours_delta = -gear_003_delta / this.gear_hours_ratio;
         this.gear_hours.rotateZ (gear_hours_delta);
+
+        this.hand_minutes.rotation.z = this.gear_minutes.rotation.z;
+        this.hand_hours.rotation.z = this.gear_hours.rotation.z;
     }
 
     private snap_escape_wheel (pendulum_direction:number):number
