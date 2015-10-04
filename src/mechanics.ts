@@ -43,7 +43,6 @@ class Mechanics
     private escape_wheel_step_start:number = 0;
 
     private time:number = 0;
-    private prev_frame_time:number;
 
     constructor (clock_root:THREE.Object3D)
     {
@@ -60,8 +59,6 @@ class Mechanics
         this.hand_minutes = clock_root.getObjectByName ('hand_minutes');
         this.hand_hours = clock_root.getObjectByName ('hand_hours');
 
-        this.prev_frame_time = new Date ().getTime ();
-
         this.show_real_time ();
     }
 
@@ -73,11 +70,9 @@ class Mechanics
         this.rotate_gears (this.total_minutes_ratio * in_hours);
     }
 
-    update ()
+    update (dt:number)
     {
-        var frame_time = new Date ().getTime ();
-        var dt = (frame_time - this.prev_frame_time) / 1000 * this.time_scale;
-        this.prev_frame_time = frame_time;
+        dt *= this.time_scale;
 
         var max_dt = 0.02;
         while (dt > 0.0001)
