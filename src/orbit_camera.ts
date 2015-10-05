@@ -3,13 +3,30 @@
 class Orbit_camera extends THREE.PerspectiveCamera
 {
     public look_at = new THREE.Vector3 ();
-    public horizontal = 0;
-    public vertical = 0;
-    public distance = 5;
+    private horizontal = 0;
+    private vertical = 0;
+    private distance = 5;
 
     constructor (fov:number, aspect:number)
     {
         super (fov, aspect, 0.1, 1000);
+    }
+
+    public rotate (horizontal:number, vertical:number)
+    {
+        this.vertical += vertical;
+        this.vertical = (this.vertical + Math.PI) % (Math.PI * 2) - Math.PI;
+
+        if (Math.abs (this.vertical) < Math.PI / 2)
+        {
+            horizontal = -horizontal;
+        }
+        this.horizontal += horizontal;
+    }
+
+    public zoom_camera (distance:number)
+    {
+        this.distance += distance;
     }
 
     public update (dt:number)

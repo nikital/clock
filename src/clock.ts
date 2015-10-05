@@ -65,8 +65,8 @@ class Clock
         this.prevDragX = e.clientX;
         this.prevDragY = e.clientY;
 
-        this.camera.horizontal -= dx * 0.01;
-        this.camera.vertical -= -dy * 0.01;
+        var rotation_factor = 0.01;
+        this.camera.rotate (dx * rotation_factor, dy * rotation_factor);
     }
 
     private on_mouse_up (e:MouseEvent)
@@ -80,8 +80,8 @@ class Clock
 
     private on_mouse_wheel (e:WheelEvent)
     {
-        console.log (e.deltaX, e.deltaY, e.deltaMode);
-        this.camera.distance += e.deltaY * 0.1;
+        var zoom_factor = 0.1;
+        this.camera.zoom_camera (e.deltaY * zoom_factor);
     }
 
     private init_lighting ()
