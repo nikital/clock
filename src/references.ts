@@ -2,5 +2,6 @@
 
 /// <reference path="clock.ts" />
 /// <reference path="mechanics.ts" />
+/// <reference path="orbit_camera.ts" />
 
 /// <reference path="TrackballControls.ts" />
