@@ -65,8 +65,16 @@ class Clock
         this.prevDragX = e.clientX;
         this.prevDragY = e.clientY;
 
-        var rotation_factor = 0.01;
-        this.camera.rotate (dx * rotation_factor, dy * rotation_factor);
+        if (!e.shiftKey)
+        {
+            var rotation_factor = 0.004;
+            this.camera.rotate (dx * rotation_factor, dy * rotation_factor);
+        }
+        else
+        {
+            var pan_factor = 0.004;
+            this.camera.pan (-dx * pan_factor, dy * pan_factor, 0);
+        }
     }
 
     private on_mouse_up (e:MouseEvent)

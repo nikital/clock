@@ -24,6 +24,12 @@ class Orbit_camera extends THREE.PerspectiveCamera
         this.horizontal += horizontal;
     }
 
+    public pan (x:number, y:number, z:number)
+    {
+        var v = new THREE.Vector3 (x, y, z);
+        this.look_at.addScaledVector (v, this.distance);
+    }
+
     public zoom_camera (distance:number)
     {
         this.distance += distance;

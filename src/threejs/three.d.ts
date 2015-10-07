@@ -3781,6 +3781,8 @@ declare module THREE {
          */
         addVectors(a: Vector3, b: Vector3): Vector3;
 
+        addScaledVector(v: Vector3, s: number): Vector3;
+
         /**
          * Subtracts v from this vector.
          */
