@@ -8,7 +8,6 @@ class Orbit_camera extends THREE.PerspectiveCamera
     private distance = 5;
 
     private restrict:THREE.Box3;
-    private pan_to_rotation_ratio:number = 1;
 
     constructor (fov:number, aspect:number)
     {
@@ -40,6 +39,7 @@ class Orbit_camera extends THREE.PerspectiveCamera
         v.applyQuaternion (q);
 
         this.look_at.addScaledVector (v, this.distance);
+        this.update_restrict ();
     }
 
     public zoom_camera (distance:number)
@@ -49,6 +49,7 @@ class Orbit_camera extends THREE.PerspectiveCamera
 
     public update (dt:number)
     {
+        this.update_restrict ();
         var q = orbit_angles_to_quat (this.horizontal, this.vertical);
         // This code is awesome, approximates camera:
         // var pos = this.look_at.clone ().add (new THREE.Vector3 (0, 0, this.distance));
@@ -58,6 +59,24 @@ class Orbit_camera extends THREE.PerspectiveCamera
 
         this.position.copy (pos);
         this.setRotationFromQuaternion (q);
+    }
+
+    update_restrict ()
+    {
+        if (!this.restrict)
+        {
+            return;
+        }
+
+        var q = orbit_angles_to_quat (this.horizontal, this.vertical);
+
+        var restrict_z_factor = new THREE.Vector3 (1, 0, 0)
+        restrict_z_factor.applyQuaternion (q);
+        var restrict = this.restrict.clone ();
+        restrict.min.z *= Math.abs (restrict_z_factor.z);
+        restrict.max.z *= Math.abs (restrict_z_factor.z);
+        console.log (restrict.max.z, restrict_z_factor.z);
+        this.look_at.clamp (restrict.min, restrict.max);
     }
 }
 

@@ -33,7 +33,7 @@ class Clock
         var geometry = new THREE.BoxGeometry( 1, 1, 1 );
         var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
         this.look = new THREE.Mesh( geometry, material );
-        this.scene.add( this.look );
+        //this.scene.add( this.look );
     }
 
     public render ()
@@ -80,7 +80,7 @@ class Clock
         }
         else
         {
-            var pan_factor = 0.004;
+            var pan_factor = 0.0025;
             this.camera.pan (-dx * pan_factor, dy * pan_factor);
         }
     }
@@ -125,5 +125,10 @@ class Clock
         this.clock = obj;
         this.scene.add (obj);
         this.mechanics = new Mechanics (obj);
+
+        var box = new THREE.Box3 ().setFromObject (obj);
+        box.min.z *= 2;
+        box.max.z *= 2;
+        this.camera.restrict_look_at (box);
     }
 }
