@@ -12,12 +12,14 @@ class Clock
     private prevDragX:number;
     private prevDragY:number;
 
+    private look:THREE.Object3D;
+
     constructor (private renderer:THREE.WebGLRenderer,
                  private width:number, private height:number,
                  loader:THREE.LoadingManager)
     {
         this.scene = new THREE.Scene ();
-        this.camera = new Orbit_camera (75, width / height);
+        this.camera = new Orbit_camera (60, width / height);
         this.camera.position.z = 5;
 
         this.init_lighting ();
@@ -27,6 +29,11 @@ class Clock
         window.addEventListener ('mousemove', this.on_mouse_move.bind (this));
         window.addEventListener ('mouseup', this.on_mouse_up.bind (this));
         window.addEventListener ('wheel', this.on_mouse_wheel.bind (this));
+
+        var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+        var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+        this.look = new THREE.Mesh( geometry, material );
+        this.scene.add( this.look );
     }
 
     public render ()
@@ -37,6 +44,7 @@ class Clock
     public update (dt:number)
     {
         this.camera.update (dt);
+        this.look.position.copy (this.camera.look_at);
         if (this.mechanics)
         {
             this.mechanics.update (dt);
@@ -73,7 +81,7 @@ class Clock
         else
         {
             var pan_factor = 0.004;
-            this.camera.pan (-dx * pan_factor, dy * pan_factor, 0);
+            this.camera.pan (-dx * pan_factor, dy * pan_factor);
         }
     }
 

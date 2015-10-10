@@ -2,4 +2,5 @@ tags
 *.blend[1-9]
 
 public/js/clock.js
+public/js/clock.js.map
 public/assets/clock.json
