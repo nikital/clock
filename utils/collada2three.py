@@ -1,5 +1,8 @@
 #! /usr/bin/env python
 
+# This is not a generic parser, it parses Collada files output by
+# Blender 2.75 using the features I'm using...
+
 import argparse
 import sys
 import json
@@ -9,16 +12,13 @@ from uuid import uuid4 as uuid
 
 class Collada (object):
 
-    Scene = namedtuple ('Scene',
-                        ['nodes'])
-    Node = namedtuple ('Node',
-                       ['name', 'transform', 'type', 'instance'])
-    Geometry = namedtuple ('Geometry',
-                       ['uuid', 'faces', 'vertices', 'normals'])
-    Face = namedtuple ('Face',
-                       ['vertices_idx', 'normals_idx'])
-    Input = namedtuple ('Input',
-                       ['source', 'offset'])
+    Scene = namedtuple ('Scene', 'nodes')
+    Node = namedtuple ('Node', 'name transform type instance')
+    GeometryWithMaterial = namedtuple ('GeometryWithMaterial', 'geom material')
+    Geometry = namedtuple ('Geometry', 'uuid faces vertices normals')
+    Face = namedtuple ('Face', 'vertices_idx normals_idx')
+    Input = namedtuple ('Input', 'source offset')
+    Effect = namedtuple ('Effect', 'uuid diffuse specular shininess')
 
     def __init__ (self, filename):
         super (Collada, self).__init__ ()
@@ -30,11 +30,15 @@ class Collada (object):
 
         root = tree.root
 
+        self._effects = {}
+        self.materials = {}
         self.geoms = {}
         self.scenes = {}
         self._nodes = {}
 
         self._parse_geoms (root)
+        self._parse_effects (root)
+        self._parse_materials (root)
         self._parse_scenes (root)
 
     def _parse_geoms (self, root_xml):
@@ -77,6 +81,30 @@ class Collada (object):
         array_str = mesh.find ("source[@id='{}']/float_array".format (source_id)).text
         return map (float, array_str.split ())
 
+    def _parse_effects (self, root_xml):
+        for effect_xml in root_xml.iterfind ('library_effects/effect'):
+            phong = effect_xml.find ('profile_COMMON/technique/phong')
+
+            def parse_color_to_hex (l):
+                vec = map (float, l.split ())
+                r = int (max (0, min (1, vec[0])) * 255)
+                g = int (max (0, min (1, vec[1])) * 255)
+                b = int (max (0, min (1, vec[2])) * 255)
+                return (r << 16) | (g << 8) | (b)
+            
+            diffuse = parse_color_to_hex (phong.find ('diffuse/color').text)
+            specular = parse_color_to_hex (phong.find ('specular/color').text)
+            shininess = float (phong.find ('shininess/float').text)
+
+            effect = self.Effect (str (uuid ()), diffuse, specular, shininess)
+            self._effects[effect_xml.attrib['id']] = effect
+
+    def _parse_materials (self, root_xml):
+        for material_xml in root_xml.iterfind ('library_materials/material'):
+            instance_effect = material_xml.find ('instance_effect').attrib['url']
+            effect = self._effects[instance_effect.lstrip ('#')]
+            self.materials[material_xml.attrib['id']] = effect
+
     def _parse_scenes (self, root_xml):
         for scene_xml in root_xml.iterfind ('library_visual_scenes/visual_scene'):
             nodes = self._parse_nodes (scene_xml)
@@ -94,7 +122,14 @@ class Collada (object):
 
             if instance_geometry is not None:
                 node_type = 'geom'
-                instance = self.geoms[instance_geometry.attrib['url'].lstrip ('#')]
+                instance = geom = self.geoms[instance_geometry.attrib['url'].lstrip ('#')]
+                instance_material = instance_geometry.find (
+                    'bind_material/technique_common/instance_material')
+
+                if instance_material is not None:
+                    node_type = 'geom_with_material'
+                    material = self.materials[instance_material.attrib['target'].lstrip ('#')]
+                    instance = self.GeometryWithMaterial (geom, material)
             else:
                 node_type = 'unk'
                 instance = None
@@ -139,21 +174,34 @@ def emit_three (collada):
         'color': 0xaaaaaa,
         'emissive': 0
     }
-
     three['materials'].append (default_material)
+    for material in collada.materials.values ():
+        material_three = {
+            'uuid': material.uuid,
+            'type': 'MeshPhongMaterial',
+            'color': material.diffuse,
+            'specular': material.diffuse,
+            'shininess': material.shininess,
+        }
+        three['materials'].append (material_three)
 
     assert len (collada.scenes) == 1
     scene = collada.scenes.values ()[0]
     for node in scene.nodes:
-        if node.type != 'geom':
+        if node.type not in ['geom', 'geom_with_material']:
             continue
         node_three = {
             'type': 'Mesh',
             'name': node.name,
-            'geometry': node.instance.uuid,
-            'material': default_material['uuid'],
             'matrix': reorder_matrix4 (node.transform),
         }
+        if node.type == 'geom':
+            node_three['geometry'] = node.instance.uuid
+            node_three['material'] = default_material['uuid']
+        elif node.type == 'geom_with_material':
+            node_three['geometry'] = node.instance.geom.uuid
+            node_three['material'] = node.instance.material.uuid
+            node_three['metal'] = 1
 
         three['object']['children'].append (node_three)
 
