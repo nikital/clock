@@ -87,9 +87,10 @@ class Collada (object):
 
             def parse_color_to_hex (l):
                 vec = map (float, l.split ())
-                r = int (max (0, min (1, vec[0])) * 255)
-                g = int (max (0, min (1, vec[1])) * 255)
-                b = int (max (0, min (1, vec[2])) * 255)
+                gamma = 1 / 2.2
+                r = int (max (0, min (1, vec[0]) ** gamma) * 255)
+                g = int (max (0, min (1, vec[1]) ** gamma) * 255)
+                b = int (max (0, min (1, vec[2]) ** gamma) * 255)
                 return (r << 16) | (g << 8) | (b)
             
             diffuse = parse_color_to_hex (phong.find ('diffuse/color').text)
