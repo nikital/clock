@@ -22,14 +22,14 @@ class Orbit_camera extends THREE.PerspectiveCamera
     public rotate (horizontal:number, vertical:number)
     {
         this.vertical += vertical;
-        this.vertical = (this.vertical + Math.PI) % (Math.PI * 2) - Math.PI;
+        this.vertical = Math.max (-Math.PI, Math.min (Math.PI, this.vertical));
 
         if (Math.abs (this.vertical) < Math.PI / 2)
         {
             horizontal = -horizontal;
         }
         this.horizontal += horizontal;
-        this.horizontal = (this.horizontal + Math.PI) % (Math.PI * 2) - Math.PI;
+        this.horizontal = Math.max (-Math.PI, Math.min (Math.PI, this.horizontal));
     }
 
     public pan (x:number, y:number)
