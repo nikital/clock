@@ -126,5 +126,9 @@ class Clock
         box.min.z *= 2;
         box.max.z *= 2;
         this.camera.restrict_look_at (box);
+
+        this.camera.set_look_at (obj.getObjectByName ('gear_hours').position);
+        this.camera.horizontal = Math.PI;
+        this.camera.set_zoom (16);
     }
 }

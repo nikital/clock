@@ -47,6 +47,16 @@ class Orbit_camera extends THREE.PerspectiveCamera
         this.distance += distance;
     }
 
+    public set_look_at (v:THREE.Vector3)
+    {
+        this.look_at.copy (v);
+    }
+
+    public set_zoom (distance:number)
+    {
+        this.distance = distance;
+    }
+
     public update (dt:number)
     {
         this.update_restrict ();
