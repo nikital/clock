@@ -15,6 +15,8 @@ class Main
         this.renderer.setSize (window.innerWidth, window.innerHeight);
         document.body.appendChild (this.renderer.domElement);
 
+        //this.renderer.setClearColor(0x534338);
+
         var loader = new THREE.LoadingManager ();
 
         this.clock = new Clock (this.renderer,

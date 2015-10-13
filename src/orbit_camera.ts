@@ -75,7 +75,6 @@ class Orbit_camera extends THREE.PerspectiveCamera
         var restrict = this.restrict.clone ();
         restrict.min.z *= Math.abs (restrict_z_factor.z);
         restrict.max.z *= Math.abs (restrict_z_factor.z);
-        console.log (restrict.max.z, restrict_z_factor.z);
         this.look_at.clamp (restrict.min, restrict.max);
     }
 }

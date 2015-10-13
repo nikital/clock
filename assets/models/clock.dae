@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.75.0 commit date:2015-07-01, commit time:12:00, hash:c6b042b</authoring_tool>
     </contributor>
-    <created>2015-10-13T01:16:43</created>
-    <modified>2015-10-13T01:16:43</modified>
+    <created>2015-10-13T23:09:16</created>
+    <modified>2015-10-13T23:09:16</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -26,7 +26,7 @@
               <color sid="diffuse">0.3360191 0.2184272 0.1271864 1</color>
             </diffuse>
             <specular>
-              <color sid="specular">0.5 0.5 0.5 1</color>
+              <color sid="specular">0.2 0.2 0.2 1</color>
             </specular>
             <shininess>
               <float sid="shininess">50</float>
@@ -49,7 +49,7 @@
               <color sid="ambient">0 0 0 1</color>
             </ambient>
             <diffuse>
-              <color sid="diffuse">0.64 0.64 0.64 1</color>
+              <color sid="diffuse">0.06971197 0.06971197 0.06971197 1</color>
             </diffuse>
             <specular>
               <color sid="specular">0.5 0.5 0.5 1</color>
@@ -75,7 +75,7 @@
               <color sid="ambient">0 0 0 1</color>
             </ambient>
             <diffuse>
-              <color sid="diffuse">0.03733207 0.03733207 0.03976526 1</color>
+              <color sid="diffuse">0.7434371 0.7434394 0.8 1</color>
             </diffuse>
             <specular>
               <color sid="specular">0.5 0.5 0.5 1</color>
@@ -130,7 +130,7 @@
               <color sid="diffuse">0.3050608 0.05478255 0.02648382 1</color>
             </diffuse>
             <specular>
-              <color sid="specular">0.5 0.5 0.5 1</color>
+              <color sid="specular">0.2 0.2 0.2 1</color>
             </specular>
             <shininess>
               <float sid="shininess">50</float>
@@ -156,7 +156,7 @@
               <color sid="diffuse">0.7036981 0.506261 0.2912279 1</color>
             </diffuse>
             <specular>
-              <color sid="specular">0.5 0.5 0.5 1</color>
+              <color sid="specular">0.2 0.2 0.2 1</color>
             </specular>
             <shininess>
               <float sid="shininess">50</float>
@@ -208,7 +208,7 @@
               <color sid="diffuse">0.64 0.3182678 0.104337 1</color>
             </diffuse>
             <specular>
-              <color sid="specular">0.5 0.5 0.5 1</color>
+              <color sid="specular">0.6401869 0.6401869 0.6401869 1</color>
             </specular>
             <shininess>
               <float sid="shininess">50</float>
@@ -232,6 +232,32 @@
             </ambient>
             <diffuse>
               <color sid="diffuse">0.138684 0.138684 0.138684 1</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.5 0.5 0.5 1</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">50</float>
+            </shininess>
+            <index_of_refraction>
+              <float sid="index_of_refraction">1</float>
+            </index_of_refraction>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="hand-effect">
+      <profile_COMMON>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0 0 0 1</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.8 0.8 0.8 1</color>
             </diffuse>
             <specular>
               <color sid="specular">0.5 0.5 0.5 1</color>
@@ -274,6 +300,9 @@
     </material>
     <material id="spring_holder-material" name="spring_holder">
       <instance_effect url="#spring_holder-effect"/>
+    </material>
+    <material id="hand-material" name="hand">
+      <instance_effect url="#hand-effect"/>
     </material>
   </library_materials>
   <library_geometries>
@@ -962,7 +991,7 @@
         <vertices id="hand_hours-mesh-vertices">
           <input semantic="POSITION" source="#hand_hours-mesh-positions"/>
         </vertices>
-        <polylist material="anchor-material" count="264">
+        <polylist material="hand-material" count="264">
           <input semantic="VERTEX" source="#hand_hours-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#hand_hours-mesh-normals" offset="1"/>
           <vcount>3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 </vcount>
@@ -995,7 +1024,7 @@
         <vertices id="hand_minutes-mesh-vertices">
           <input semantic="POSITION" source="#hand_minutes-mesh-positions"/>
         </vertices>
-        <polylist material="gear3-material" count="212">
+        <polylist material="hand-material" count="212">
           <input semantic="VERTEX" source="#hand_minutes-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#hand_minutes-mesh-normals" offset="1"/>
           <vcount>3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 </vcount>
@@ -1212,7 +1241,7 @@
         <instance_geometry url="#hand_hours-mesh" name="hand_hours">
           <bind_material>
             <technique_common>
-              <instance_material symbol="anchor-material" target="#anchor-material"/>
+              <instance_material symbol="hand-material" target="#hand-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1222,7 +1251,7 @@
         <instance_geometry url="#hand_minutes-mesh" name="hand_minutes">
           <bind_material>
             <technique_common>
-              <instance_material symbol="gear3-material" target="#gear3-material"/>
+              <instance_material symbol="hand-material" target="#hand-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>

@@ -5,14 +5,13 @@ class Clock
     private scene:THREE.Scene;
     private camera:Orbit_camera;
     private clock:THREE.Object3D;
+    private lighting:THREE.Object3D;
 
     private mechanics:Mechanics;
 
     private dragging = false;
     private prevDragX:number;
     private prevDragY:number;
-
-    private look:THREE.Object3D;
 
     constructor (private renderer:THREE.WebGLRenderer,
                  private width:number, private height:number,
@@ -32,8 +31,6 @@ class Clock
 
         var geometry = new THREE.BoxGeometry( 1, 1, 1 );
         var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-        this.look = new THREE.Mesh( geometry, material );
-        //this.scene.add( this.look );
     }
 
     public render ()
@@ -44,7 +41,7 @@ class Clock
     public update (dt:number)
     {
         this.camera.update (dt);
-        this.look.position.copy (this.camera.look_at);
+        this.lighting.rotation.copy (this.camera.rotation);
         if (this.mechanics)
         {
             this.mechanics.update (dt);
@@ -102,15 +99,14 @@ class Clock
 
     private init_lighting ()
     {
-        this.scene.add (new THREE.AmbientLight (0x333333));
+        this.lighting = new THREE.Object3D ();
+        this.scene.add (this.lighting);
 
-        var light = new THREE.DirectionalLight (0xffffff, 1);
+        this.lighting.add (new THREE.AmbientLight (0x666666));
+
+        var light = new THREE.DirectionalLight (0xffffff, 0.5);
         light.position.set (0, 1, 1);
-        this.scene.add (light);
-
-        var light2 = new THREE.PointLight (0xffffff, 1, 10);
-        light2.position.set (0, 0, -2);
-        this.scene.add (light2);
+        this.lighting.add (light);
     }
 
     private load_clock (manager:THREE.LoadingManager)
