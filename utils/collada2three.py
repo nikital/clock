@@ -13,7 +13,7 @@ from uuid import uuid4 as uuid
 class Collada (object):
 
     Scene = namedtuple ('Scene', 'nodes')
-    Node = namedtuple ('Node', 'name transform type instance')
+    Node = namedtuple ('Node', 'name transform type instance children')
     GeometryWithMaterial = namedtuple ('GeometryWithMaterial', 'geom material')
     Geometry = namedtuple ('Geometry', 'uuid faces vertices normals')
     Face = namedtuple ('Face', 'vertices_idx normals_idx')
@@ -34,7 +34,6 @@ class Collada (object):
         self.materials = {}
         self.geoms = {}
         self.scenes = {}
-        self._nodes = {}
 
         self._parse_geoms (root)
         self._parse_effects (root)
@@ -115,7 +114,7 @@ class Collada (object):
 
     def _parse_nodes (self, scene_xml):
         nodes = []
-        for node_xml in scene_xml.iter ('node'):
+        for node_xml in scene_xml.iterfind ('node'):
             transform_str = node_xml.find ("matrix[@sid='transform']").text
             transform = map (float, transform_str.split ())
 
@@ -135,9 +134,10 @@ class Collada (object):
                 node_type = 'unk'
                 instance = None
 
-            node = self.Node (node_xml.attrib['name'], transform, node_type, instance)
+            children = self._parse_nodes (node_xml)
+
+            node = self.Node (node_xml.attrib['name'], transform, node_type, instance, children)
             nodes.append (node)
-            self._nodes[node_xml.attrib['id']] = node
         return nodes
 
 def emit_three (collada):
@@ -188,23 +188,31 @@ def emit_three (collada):
 
     assert len (collada.scenes) == 1
     scene = collada.scenes.values ()[0]
-    for node in scene.nodes:
-        if node.type not in ['geom', 'geom_with_material']:
-            continue
-        node_three = {
-            'type': 'Mesh',
-            'name': node.name,
-            'matrix': reorder_matrix4 (node.transform),
-        }
-        if node.type == 'geom':
-            node_three['geometry'] = node.instance.uuid
-            node_three['material'] = default_material['uuid']
-        elif node.type == 'geom_with_material':
-            node_three['geometry'] = node.instance.geom.uuid
-            node_three['material'] = node.instance.material.uuid
-            node_three['metal'] = 1
 
-        three['object']['children'].append (node_three)
+    def recursive_emit_nodes (parent, nodes):
+        for node in nodes:
+            if node.type not in ['geom', 'geom_with_material']:
+                continue
+            node_three = {
+                'type': 'Mesh',
+                'name': node.name,
+                'matrix': reorder_matrix4 (node.transform),
+            }
+            if node.type == 'geom':
+                node_three['geometry'] = node.instance.uuid
+                node_three['material'] = default_material['uuid']
+            elif node.type == 'geom_with_material':
+                node_three['geometry'] = node.instance.geom.uuid
+                node_three['material'] = node.instance.material.uuid
+                node_three['metal'] = 1
+
+            if node.children:
+                node_three['children'] = []
+                recursive_emit_nodes (node_three, node.children)
+
+            parent['children'].append (node_three)
+
+    recursive_emit_nodes (three['object'], scene.nodes)
 
     return three
 
