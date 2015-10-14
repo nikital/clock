@@ -48,6 +48,14 @@ class Clock
         }
     }
 
+    public resize (w:number, h:number)
+    {
+        this.width = w;
+        this.height = h;
+        this.camera.aspect = w / h;
+        this.camera.updateProjectionMatrix();
+    }
+
     private on_mouse_down (e:MouseEvent)
     {
         if (e.button != 0)

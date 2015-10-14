@@ -27,6 +27,7 @@ class Main
         this.prev_frame_time = new Date ().getTime () - 16;
         this.update ();
         setInterval (this.update.bind (this), 16);
+        window.addEventListener ('resize', this.on_resize.bind(this), false);
     }
 
     private render ()
@@ -42,6 +43,12 @@ class Main
         this.prev_frame_time = frame_time;
 
         this.clock.update (dt);
+    }
+
+    private on_resize ()
+    {
+        this.renderer.setSize (window.innerWidth, window.innerHeight);
+        this.clock.resize (window.innerWidth, window.innerHeight);
     }
 }
 
