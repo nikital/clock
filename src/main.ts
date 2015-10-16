@@ -40,6 +40,7 @@ class Main
         var dt = (frame_time - this.prev_frame_time) / 1000;
         this.prev_frame_time = frame_time;
 
+        dt = Math.min (dt, 1);
         this.clock.update (dt);
     }
 
