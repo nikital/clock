@@ -4,5 +4,3 @@
 /// <reference path="mechanics.ts" />
 /// <reference path="orbit_camera.ts" />
 /// <reference path="math.ts" />
-
-/// <reference path="TrackballControls.ts" />
