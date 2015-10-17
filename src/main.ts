@@ -6,6 +6,8 @@ class Main
     private renderer:THREE.WebGLRenderer;
     private clock:Clock;
 
+    private speed:Slider;
+
     private prev_frame_time:number;
 
     constructor ()
@@ -15,7 +17,10 @@ class Main
         this.renderer.setSize (this.container.offsetWidth, this.container.offsetHeight);
         this.container.appendChild (this.renderer.domElement);
 
-        //this.renderer.setClearColor(0x534338);
+        this.speed = new Slider (document.getElementById ("speed-slider"),
+                                 0, 3,
+                                 this.on_speed_change.bind (this));
+        this.speed.set_value (1);
 
         var loader = new THREE.LoadingManager ();
 
@@ -44,6 +49,16 @@ class Main
 
         dt = Math.min (dt, 1);
         this.clock.update (dt);
+    }
+
+    private on_speed_change (new_speed:number)
+    {
+        var adjusted = new_speed;
+        if (new_speed > 1)
+        {
+            adjusted = 1 + Math.pow ((new_speed - 1) / 2, 3) * 1000;
+        }
+        this.clock.set_speed (adjusted);
     }
 
     private on_resize ()

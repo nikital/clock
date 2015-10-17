@@ -3,8 +3,8 @@
 class Orbit_camera extends THREE.PerspectiveCamera
 {
     private look_at = new THREE.Vector3 ();
-    private horizontal = 0;
-    private vertical = 0;
+    public horizontal = 0;
+    public vertical = 0;
     private distance = 5;
 
     private current_look_at = new THREE.Vector3 ();

@@ -48,6 +48,11 @@ class Clock
         }
     }
 
+    public set_speed (speed:number)
+    {
+        this.mechanics.time_scale = speed;
+    }
+
     public resize (w:number, h:number)
     {
         this.width = w;

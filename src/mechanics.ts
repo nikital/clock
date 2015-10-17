@@ -38,7 +38,7 @@ class Mechanics
         this.gear_000_ratio * this.gear_001_ratio * this.gear_minutes_ratio;
 
     // Runtime animation stuff
-    private time_scale:number = 1;
+    public time_scale:number = 1;
     private escape_wheel_moving:boolean = false;
     private escape_wheel_step_start:number = 0;
 
