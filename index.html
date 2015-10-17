@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <title>Clock</title>
+        <link rel="stylesheet" href="css/reset.css" />
+        <link rel="stylesheet" href="css/fonts.css" />
+        <link rel="stylesheet" href="css/clock.css" />
+    </head>
+    <body>
+        <div class="dim">
+            <h1>Loading...</h1>
+        </div>
+        <div class="container">
+            <div class="menu">
+                <h1>Clock</h1>
+                <h2>Parts</h2>
+                <ul id="part-btns">
+                    <li data-part="pendulum">Balance</li>
+                    <li data-part="anchor">Anchor</li>
+                    <li data-part="escape_wheel">Escape Wheel</li>
+                    <li data-part="movement_spring">Main Spring</li>
+                    <li data-part="gear_hours">Hands</li>
+                </ul>
+                <h2>Speed</h2>
+                <ul>
+                    <li>
+                        <div id="speed-slider" class="slider-outer">
+                            <div class="slider-inner">
+                            </div>
+                        </div>
+                    </li>
+                    <li id="reset-btn">Reset</li>
+                </ul>
+                <h2>Camera</h2>
+                <p>Drag Mouse - Rotate</p>
+                <p>Shift + Mouse - Pan</p>
+                <p>Mouse Wheel - Zoom</p>
+            </div>
+            <div id="render-container">
+                <div class="help">
+                    <h1 id="help-title"></h1>
+                    <p id="help-text"></p>
+                </div>
+            </div>
+        </div>
+            <script src="js/thirdparty/three.min.js"></script>
+            <script src="js/clock.js"></script>
+    </body>
+</html>

@@ -1,0 +1,102 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Roboto Slab', sans-serif;
+}
+
+.container {
+    display: flex;
+    height: 100%;
+    align-items: stretch;
+    overflow: hidden;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#render-container {
+    flex: 1;
+}
+
+.menu {
+    flex: 0 0 230px;
+    background: #303030;
+    color: white;
+    overflow: auto;
+}
+
+.menu h1 {
+    padding: 0.5em;
+    font-weight: bold;
+    font-size: 2em;
+    text-align: center;
+}
+
+.menu h2 {
+    padding: 0.5em;
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.menu ul {
+    padding: 0;
+}
+.menu li {
+    list-style: none;
+    text-align: left;
+    padding: 0.5em 1.5em;
+    cursor: pointer;
+}
+.menu li:hover {
+    background: #444444;
+}
+
+.menu p {
+    padding: 0.5em 1.5em;
+}
+
+.slider-outer {
+    height: 1.5em;
+    background: black;
+    cursor: col-resize;
+}
+.slider-inner {
+    width: 30%;
+    background: white;
+    height: 100%;
+}
+
+.help {
+    position: absolute;
+    bottom: 5px;
+    z-index: 2;
+    margin: 0;
+    color: white;
+    padding: 0 1em 1em 1em;
+    width: 400px;
+    line-height: 130%;
+}
+.help h1 {
+    font-weight: bold;
+    font-size: 1.5em;
+    padding: 1em 0;
+}
+
+.dim {
+    height:100%;
+    width:100%;
+    position:fixed;
+    left:0;
+    top:0;
+    z-index:1 !important;
+    background-color:black;
+    padding: 3em;
+}
+
+.dim h1 {
+    color: white;
+    font-size: 1.5em;
+}
