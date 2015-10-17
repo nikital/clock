@@ -20,6 +20,14 @@ html, body {
     flex: 0 0 230px;
     background: #303030;
     color: white;
+    overflow: auto;
+}
+
+.menu h1 {
+    padding: 0.5em;
+    font-weight: bold;
+    font-size: 2em;
+    text-align: center;
 }
 
 .menu h2 {
