@@ -2,6 +2,7 @@ html, body {
     margin: 0;
     padding: 0;
     height: 100%;
+    font-family: 'Roboto Slab', sans-serif;
 }
 
 .container {
@@ -10,12 +11,48 @@ html, body {
     align-items: stretch;
 }
 
-.menu {
-    flex: 0 0 200px;
-    background: tomato;
-}
-
 #render-container {
     flex: 1;
     overflow: hidden;
+}
+
+.menu {
+    flex: 0 0 230px;
+    background: #303030;
+    color: white;
+}
+
+.menu h2 {
+    padding: 0.5em;
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.menu ul {
+    padding: 0;
+}
+.menu li {
+    list-style: none;
+    text-align: left;
+    padding: 0.5em 1.5em;
+    cursor: pointer;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.menu li:hover {
+    background: #444444;
+}
+
+.slider-outer {
+    height: 1.5em;
+    background: black;
+    cursor: col-resize;
+}
+.slider-inner {
+    width: 30%;
+    background: white;
+    height: 100%;
 }
