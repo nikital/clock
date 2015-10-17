@@ -14,8 +14,8 @@ class Slider
         this.inner = <HTMLElement>outer.getElementsByClassName ("slider-inner")[0];
 
         outer.addEventListener ("mousedown", this.on_down.bind (this));
-        outer.addEventListener ("mousemove", this.on_move.bind (this));
-        outer.addEventListener ("mouseup", this.on_up.bind (this));
+        window.addEventListener ("mousemove", this.on_move.bind (this));
+        window.addEventListener ("mouseup", this.on_up.bind (this));
     }
 
     public set_value (value:number)
@@ -27,18 +27,21 @@ class Slider
 
     on_down (e:MouseEvent)
     {
-        if (!(e.buttons & 1))
+        if (e.button != 0)
         {
             return;
         }
-        this.outer.setCapture ();
+        if (this.outer.setCapture != undefined)
+        {
+            this.outer.setCapture ();
+        }
         this.dragging = true;
         this.on_move (e);
     }
 
     on_move (e:MouseEvent)
     {
-        if (!(e.buttons & 1))
+        if (e.button != 0 || !this.dragging)
         {
             return;
         }
@@ -49,11 +52,14 @@ class Slider
 
     on_up (e:MouseEvent)
     {
-        if (!(e.buttons & 1))
+        if (e.button != 0 || !this.dragging)
         {
             return;
         }
-        this.outer.releaseCapture ();
+        if (this.outer.releaseCapture != undefined)
+        {
+            this.outer.releaseCapture ();
+        }
         this.on_move (e);
         this.dragging = false;
     }

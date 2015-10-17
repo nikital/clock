@@ -19,7 +19,7 @@ class Main
 
         this.init_gui ();
 
-        var loader = new THREE.LoadingManager ();
+        var loader = new THREE.LoadingManager (this.on_load.bind (this), undefined, this.on_error.bind(this));
 
         this.clock = new Clock (this.renderer,
                                 this.container.offsetWidth, this.container.offsetHeight,
@@ -117,6 +117,16 @@ class Main
         var text = document.getElementById ("help-text");
         title.innerHTML = part.title;
         text.innerHTML = part.text;
+    }
+
+    private on_load ()
+    {
+        var dim = document.getElementsByClassName ("dim")[0];
+        dim.style.display = 'none';
+    }
+    private on_error ()
+    {
+        console.log ('Error');
     }
 }
 

@@ -10,6 +10,11 @@ html, body {
     height: 100%;
     align-items: stretch;
     overflow: hidden;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 #render-container {
@@ -44,11 +49,6 @@ html, body {
     text-align: left;
     padding: 0.5em 1.5em;
     cursor: pointer;
-
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
 }
 .menu li:hover {
     background: #444444;
@@ -83,4 +83,20 @@ html, body {
     font-weight: bold;
     font-size: 1.5em;
     padding: 1em 0;
+}
+
+.dim {
+    height:100%;
+    width:100%;
+    position:fixed;
+    left:0;
+    top:0;
+    z-index:1 !important;
+    background-color:black;
+    padding: 3em;
+}
+
+.dim h1 {
+    color: white;
+    font-size: 1.5em;
 }
