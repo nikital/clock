@@ -89,7 +89,34 @@ class Main
 
     private on_part (e:MouseEvent)
     {
+        var parts = {
+            gear_hours: {
+                title: 'Clock',
+                text: 'This is the movement mechanism of an old alarm clock. I found it at my grandmother\'s apartment, took it apart and recreated it in WebGL. Code is on github.com/nikital/clock.'
+            },
+            pendulum: {
+                title: 'Balance',
+                text: 'Analogous to the pendulum. It does the actual time keeping. Attached to the hairspring, which makes the movement harmonic. The period of the motion is constant and doesn\'t depend on the amplitude of the balance wheel.'
+            },
+            anchor: {
+                title: 'Anchor',
+                text: 'Locks and unlocks the escape wheel. It\'s moved by the impulse pin on the balance wheel.'
+            },
+            escape_wheel: {
+                title: 'Escape Wheel',
+                text: 'Moves in steps. Connected to the hands of the clock by gears. It also pushes against the anchor while it unlocks the wheel, giving energy to the balance wheel. Note the shape of it\'s teeth, slow the clock down, and watch carefully how it briefly pushed the pallet when the rotation starts.'
+            },
+            movement_spring: {
+                title: 'Main Spring',
+                text: 'The energy for the clock comes from here. It rotates the big gear and eventually the escape wheel. The spring must be rewound from time to time.'
+            },
+        }
+        var part = parts[e.target.dataset ['part']];
         this.clock.look_at_part (e.target.dataset ['part']);
+        var title = document.getElementById ("help-title");
+        var text = document.getElementById ("help-text");
+        title.innerHTML = part.title;
+        text.innerHTML = part.text;
     }
 }
 

@@ -68,3 +68,19 @@ html, body {
     background: white;
     height: 100%;
 }
+
+.help {
+    position: absolute;
+    bottom: 5px;
+    z-index: 2;
+    margin: 0;
+    color: white;
+    padding: 0 1em 1em 1em;
+    width: 400px;
+    line-height: 130%;
+}
+.help h1 {
+    font-weight: bold;
+    font-size: 1.5em;
+    padding: 1em 0;
+}
