@@ -50,7 +50,7 @@ class Orbit_camera extends THREE.PerspectiveCamera
     public zoom_camera (distance:number)
     {
         this.distance += distance;
-        this.distance = Math.max (1, this.distance);
+        this.distance = Math.max (1, Math.min (100, this.distance));
     }
 
     public set_look_at (v:THREE.Vector3)
