@@ -2,6 +2,7 @@
 
 class Main
 {
+    private container:HTMLElement;
     private renderer:THREE.WebGLRenderer;
     private clock:Clock;
 
@@ -9,23 +10,24 @@ class Main
 
     constructor ()
     {
+        this.container = document.getElementById ("render-container");
         this.renderer = new THREE.WebGLRenderer ();
-        this.renderer.setSize (window.innerWidth, window.innerHeight);
-        document.body.appendChild (this.renderer.domElement);
+        this.renderer.setSize (this.container.offsetWidth, this.container.offsetHeight);
+        this.container.appendChild (this.renderer.domElement);
 
         //this.renderer.setClearColor(0x534338);
 
         var loader = new THREE.LoadingManager ();
 
         this.clock = new Clock (this.renderer,
-                                window.innerWidth, window.innerHeight,
+                                this.container.offsetWidth, this.container.offsetHeight,
                                 loader);
 
         this.render ();
         this.prev_frame_time = new Date ().getTime () - 16;
         this.update ();
         setInterval (this.update.bind (this), 16);
-        window.addEventListener ('resize', this.on_resize.bind(this), false);
+        window.addEventListener ("resize", this.on_resize.bind(this), false);
     }
 
     private render ()
@@ -46,8 +48,8 @@ class Main
 
     private on_resize ()
     {
-        this.renderer.setSize (window.innerWidth, window.innerHeight);
-        this.clock.resize (window.innerWidth, window.innerHeight);
+        this.renderer.setSize (this.container.offsetWidth, this.container.offsetHeight);
+        this.clock.resize (this.container.offsetWidth, this.container.offsetHeight);
     }
 }
 

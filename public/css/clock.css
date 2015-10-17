@@ -1,7 +1,21 @@
-body {
+html, body {
     margin: 0;
+    padding: 0;
+    height: 100%;
 }
 
-canvas {
-    display: block;
+.container {
+    display: flex;
+    height: 100%;
+    align-items: stretch;
+}
+
+.menu {
+    flex: 0 0 200px;
+    background: tomato;
+}
+
+#render-container {
+    flex: 1;
+    overflow: hidden;
 }
