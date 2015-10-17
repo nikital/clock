@@ -50,7 +50,10 @@ class Clock
 
     public set_speed (speed:number)
     {
-        this.mechanics.time_scale = speed;
+        if (this.mechanics)
+        {
+            this.mechanics.time_scale = speed;
+        }
     }
 
     public resize (w:number, h:number)
@@ -59,6 +62,22 @@ class Clock
         this.height = h;
         this.camera.aspect = w / h;
         this.camera.updateProjectionMatrix();
+    }
+
+    public look_at_part (part:string)
+    {
+        var orientations = {
+            gear_hours: [Math.PI, 0, 16],
+            pendulum: [0.61, 0.05, 7],
+            anchor: [-2.8, 0, 5],
+            escape_wheel: [Math.PI, 0, 6.2],
+            movement_spring: [0.58, 0.34, 11],
+        };
+        this.camera.set_look_at (this.clock.getObjectByName (part).position);
+        var orientation = orientations[part];
+        this.camera.horizontal = orientation[0];
+        this.camera.vertical = orientation[1];
+        this.camera.set_zoom (orientation[2]);
     }
 
     private on_mouse_down (e:MouseEvent)
@@ -140,8 +159,6 @@ class Clock
         box.max.z *= 2;
         this.camera.restrict_look_at (box);
 
-        this.camera.set_look_at (obj.getObjectByName ('gear_hours').position);
-        this.camera.horizontal = Math.PI;
-        this.camera.set_zoom (16);
+        this.look_at_part ("gear_hours");
     }
 }

@@ -17,10 +17,7 @@ class Main
         this.renderer.setSize (this.container.offsetWidth, this.container.offsetHeight);
         this.container.appendChild (this.renderer.domElement);
 
-        this.speed = new Slider (document.getElementById ("speed-slider"),
-                                 0, 3,
-                                 this.on_speed_change.bind (this));
-        this.speed.set_value (1);
+        this.init_gui ();
 
         var loader = new THREE.LoadingManager ();
 
@@ -33,6 +30,23 @@ class Main
         this.update ();
         setInterval (this.update.bind (this), 16);
         window.addEventListener ("resize", this.on_resize.bind(this), false);
+    }
+
+    private init_gui ()
+    {
+        this.speed = new Slider (document.getElementById ("speed-slider"),
+                                 0, 3,
+                                 this.on_speed_change.bind (this));
+        this.speed.set_value (1);
+
+        var reset_btn = document.getElementById ("reset-btn");
+        reset_btn.addEventListener ("click", this.on_reset.bind(this));
+
+        var parts = document.querySelectorAll ("#part-btns li");
+        for (var i = 0; i < parts.length; ++i)
+        {
+            parts[i].addEventListener ("click", this.on_part.bind (this));
+        }
     }
 
     private render ()
@@ -65,6 +79,17 @@ class Main
     {
         this.renderer.setSize (this.container.offsetWidth, this.container.offsetHeight);
         this.clock.resize (this.container.offsetWidth, this.container.offsetHeight);
+    }
+
+    private on_reset ()
+    {
+        this.speed.set_value (1);
+        this.clock.set_speed (1);
+    }
+
+    private on_part (e:MouseEvent)
+    {
+        this.clock.look_at_part (e.target.dataset ['part']);
     }
 }
 
