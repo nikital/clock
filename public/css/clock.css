@@ -9,11 +9,11 @@ html, body {
     display: flex;
     height: 100%;
     align-items: stretch;
+    overflow: hidden;
 }
 
 #render-container {
     flex: 1;
-    overflow: hidden;
 }
 
 .menu {
@@ -44,6 +44,10 @@ html, body {
 }
 .menu li:hover {
     background: #444444;
+}
+
+.menu p {
+    padding: 0.5em 1.5em;
 }
 
 .slider-outer {
